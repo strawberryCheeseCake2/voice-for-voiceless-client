@@ -3,3 +3,38 @@
   height: 100vh;
 }
 
+.message-input .cs-message-input__content-editor {
+  background-color: white;
+}
+
+.message-input .cs-message-input__content-editor-container {
+  background-color: white;
+}
+
+.message-input .cs-message-input__content-editor-wrapper {
+  background-color: white;
+}
+
+.cs-message-input--disabled .cs-message-input__content-editor-wrapper {
+  background-color: #EEEEEE !important;
+}
+
+.cs-message-input--disabled {
+  background-color: #EEEEEE !important;
+}
+
+.chat-page {
+  width: 100vw;
+  height: 100vh;
+}
+
+.cs-message {
+  padding-top: 16px !important;
+}
+
+.cs-message--outgoing .cs-message__content {
+  border-radius: .7em .7em 0 .7em !important;
+  background-color: #218aff !important;
+  color: white !important;
+} 
+
