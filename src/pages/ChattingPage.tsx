@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { MessageProps } from "@chatscope/chat-ui-kit-react/src/types";
+import {
+  MessageProps,
+  MessageModel,
+} from "@chatscope/chat-ui-kit-react/src/types";
 
 import {
   MainContainer,
@@ -14,40 +17,82 @@ import LoginSection from "../components/login/LoginSection";
 import { AuthContext } from "../context/AuthContext";
 
 const ChattingPage = () => {
-  const messagePropsData: MessageProps[] = [
-    {
-      model: {
-        message: "Hello my friend",
-        sentTime: "15 mins ago",
-        sender: "Eliot",
-        direction: "incoming",
-        position: "single",
-      },
-    },
-    {
-      model: {
-        message: "Hello my friend",
-        sentTime: "15 mins ago",
-        sender: "Zoe",
-        direction: "outgoing",
-        position: "single",
-      },
-    },
-    {
-      model: {
-        message: "Hello my friend",
-        sentTime: "15 mins ago",
-        sender: "Eliot",
-        direction: "incoming",
-        position: "single",
-      },
-    },
-  ];
+  const [messageEntities, setMessageEntities] = useState<MessageModel[]>([]);
 
-  const [messagePropsList, setMessagePropsList] =
-    useState<MessageProps[]>(messagePropsData);
   const [username, setUsername] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [clientId, setClienId] = useState(
+    Math.floor(new Date().getTime() / 1000)
+  );
+
+  const webSocket = useRef<WebSocket>();
+
+  // Triggered when messageEntities changed
+  useEffect(() => {
+    if (!webSocket?.current) return;
+
+    webSocket.current.onmessage = (e) => {
+      const message = JSON.parse(e.data);
+
+      const newMessageEntity: MessageModel = {
+        direction: clientId == message.clientId ? "outgoing" : "incoming",
+        position: "normal",
+        message: message.message,
+        sender: `${message.clientId}`,
+      };
+      console.log(newMessageEntity);
+      setMessageEntities([...messageEntities, newMessageEntity]);
+    };
+  }, [messageEntities]);
+
+  useEffect(() => {
+    const url = "ws://0.0.0.0:8000/ws/" + clientId;
+    const ws = new WebSocket(url);
+
+    ws.onopen = (event) => {
+
+    };
+
+    // recieve message every start page
+    ws.onmessage = (e) => {
+      const message = JSON.parse(e.data);
+      console.log("onmessage!!!!!");
+      console.log(message);
+      console.log(messageEntities);
+
+      const newMessageEntity: MessageModel = {
+        direction: clientId == message.clientId ? "outgoing" : "incoming",
+        position: "normal",
+        message: message.message,
+        sender: `${message.cliendId}`,
+      };
+      console.log(newMessageEntity);
+      console.log("----------end onmessage");
+
+      setMessageEntities([...messageEntities, newMessageEntity]);
+    };
+
+    webSocket.current = ws;
+    //clean up function when we close page
+    return () => ws.close();
+  }, []);
+
+  const messageToProps = (message: MessageModel) => {
+    const _props: MessageProps = { model: message };
+    return _props;
+  };
+
+  const sendMessage = (_messageEntity: MessageModel) => {
+    console.log("hit sendMessage!!!!!!!");
+    if (webSocket?.current) {
+      if (_messageEntity.message) {
+        webSocket.current.send(_messageEntity.message);
+      }
+    } else {
+      console.log("Error: no websocket");
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -64,33 +109,31 @@ const ChattingPage = () => {
 
           <ChatContainer>
             <MessageList>
-              {messagePropsList.map((messageProps, i: number) => (
+              {messageEntities.map((m, i: number) => (
                 <Message
                   key={i}
-                  {...messageProps}
-                  children={
-                    <Message.Header>
-                      {messageProps.model?.sender}
-                    </Message.Header>
-                  }
+                  {...messageToProps(m)}
+                  children={<Message.Header>{m.sender}</Message.Header>}
                 />
               ))}
             </MessageList>
             <MessageInput
               className="message-input"
-              placeholder={isLoggedIn ? "Type message here" : "Login to send a message"}
+              placeholder={
+                isLoggedIn ? "Type message here" : "Login to send a message"
+              }
               attachButton={false}
               onSend={(innerText) => {
-                const newMessageProps: MessageProps = {
-                  model: {
-                    message: innerText,
-                    sentTime: "15 mins ago",
-                    sender: "Me",
-                    direction: "outgoing",
-                    position: "single",
-                  },
+                const newMessageEntity: MessageModel = {
+                  message: innerText,
+                  sender: clientId.toString(),
+                  direction: "outgoing",
+                  position: "normal",
                 };
-                setMessagePropsList([...messagePropsList, newMessageProps]);
+                console.log("onsend");
+                console.log(newMessageEntity);
+                sendMessage(newMessageEntity);
+                // setMessageEntities([...messageEntities, newMessageEntity]);
               }}
               disabled={!isLoggedIn}
             />
