@@ -2,6 +2,7 @@ import "./LoginSection.css"
 import React, { useEffect, useState, useContext } from 'react'
 import { AuthContext } from "../../context/AuthContext"
 import axios from "axios"
+import { UserType } from "../../types/UserType"
 
 const LoginSection = () => {
 
@@ -13,34 +14,36 @@ const LoginSection = () => {
   
 
   const createUsername = async () => {
-    const userId = await createUser(username)
-
-    if (!userId) {
-      alert("Error getting UserId")
+    const user = await createUser(username)
+    if (!user) {
+      alert("Error creating user")
       return
-    } 
-    
-    setUserId(userId)
+    }
+     
+    setUserId(user.id)
+    setUsername(user.name)
     setIsLoggedIn(true)
   }
 
   const createUser = async (_username: string) => {
     const url = "http://localhost:8000"
 
-    const userId: number | undefined = await axios.post(`${url}/users/`, {
+    const user: UserType | undefined  = await axios.post(`${url}/users/`, {
       name: _username,
     })
     .then(function (response) {
-      
-      return response.data.id
+      const data: UserType = response.data
+
+      return data
     })
     .catch(function (error) {
       console.log(error);
+      return undefined
     });
 
-    console.log(userId)
+    console.log(user)
     
-    return userId
+    return user
   }
 
   return (
