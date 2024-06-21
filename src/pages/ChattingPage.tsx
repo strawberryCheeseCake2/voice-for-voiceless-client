@@ -16,12 +16,14 @@ import {
 import LoginSection from "../components/login/LoginSection";
 import { AuthContext } from "../context/AuthContext";
 
+import axios from "axios";
+
 const ChattingPage = () => {
   const [messageEntities, setMessageEntities] = useState<MessageModel[]>([]);
 
   const [username, setUsername] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const webSocket = useRef<WebSocket>();
 
  
@@ -95,6 +97,8 @@ const ChattingPage = () => {
 
     // After sending, server will broadcast message which triggers event listener of onmessage
   };
+
+
 
   return (
     <AuthContext.Provider
