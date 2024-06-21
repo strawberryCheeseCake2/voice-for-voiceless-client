@@ -22,76 +22,78 @@ const ChattingPage = () => {
   const [username, setUsername] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [clientId, setClienId] = useState(
-    Math.floor(new Date().getTime() / 1000)
-  );
-
   const webSocket = useRef<WebSocket>();
 
-  // Triggered when messageEntities changed
+ 
+  // Executed when messageEntities are changed  
   useEffect(() => {
+    // console.log(messageEntities)
     if (!webSocket?.current) return;
-
+    
     webSocket.current.onmessage = (e) => {
       const message = JSON.parse(e.data);
 
       const newMessageEntity: MessageModel = {
-        direction: clientId == message.clientId ? "outgoing" : "incoming",
+        // direction: clientId == message.clientId ? "outgoing" : "incoming",
+        direction: username == message.username ? "outgoing" : "incoming",
         position: "normal",
         message: message.message,
-        sender: `${message.clientId}`,
+        sender: `${message.username}`,
       };
-      console.log(newMessageEntity);
+
+      /* messageEntities here will always get latest value due to dependency */
       setMessageEntities([...messageEntities, newMessageEntity]);
     };
   }, [messageEntities]);
 
+  // Executed only on first render
   useEffect(() => {
-    const url = "ws://0.0.0.0:8000/ws/" + clientId;
+    if (!isLoggedIn) return
+
+    const url = "ws://0.0.0.0:8000/ws/" + username;
     const ws = new WebSocket(url);
 
-    ws.onopen = (event) => {
+    // executed on connect
+    ws.onopen = (event) => {};
 
-    };
-
-    // recieve message every start page
+    // executed on messeage recieved
+    /* only executed for first-time receive */
     ws.onmessage = (e) => {
+      
+      console.log(`onmessage 1, ${e.data}`)
       const message = JSON.parse(e.data);
-      console.log("onmessage!!!!!");
-      console.log(message);
-      console.log(messageEntities);
-
       const newMessageEntity: MessageModel = {
-        direction: clientId == message.clientId ? "outgoing" : "incoming",
+        direction: username == message.username ? "outgoing" : "incoming",
         position: "normal",
         message: message.message,
-        sender: `${message.cliendId}`,
+        sender: `${message.username}`,
       };
-      console.log(newMessageEntity);
-      console.log("----------end onmessage");
-
+      
+      /* messageEntities here will always be [] and would not get updated value */
       setMessageEntities([...messageEntities, newMessageEntity]);
     };
 
+
     webSocket.current = ws;
+
     //clean up function when we close page
     return () => ws.close();
-  }, []);
+  }, [isLoggedIn]);
 
   const messageToProps = (message: MessageModel) => {
     const _props: MessageProps = { model: message };
     return _props;
   };
 
-  const sendMessage = (_messageEntity: MessageModel) => {
-    console.log("hit sendMessage!!!!!!!");
-    if (webSocket?.current) {
-      if (_messageEntity.message) {
-        webSocket.current.send(_messageEntity.message);
-      }
-    } else {
+  const sendMessage = (_message: string) => {
+    if (!webSocket?.current) {
       console.log("Error: no websocket");
+      return;
     }
+
+    webSocket.current.send(_message);
+
+    // After sending, server will broadcast message which triggers event listener of onmessage
   };
 
   return (
@@ -109,13 +111,14 @@ const ChattingPage = () => {
 
           <ChatContainer>
             <MessageList>
-              {messageEntities.map((m, i: number) => (
-                <Message
+              {messageEntities.map((m, i: number) => {
+                // console.log(messageEntities)
+                return (<Message
                   key={i}
                   {...messageToProps(m)}
                   children={<Message.Header>{m.sender}</Message.Header>}
-                />
-              ))}
+                />)
+              })}
             </MessageList>
             <MessageInput
               className="message-input"
@@ -123,18 +126,7 @@ const ChattingPage = () => {
                 isLoggedIn ? "Type message here" : "Login to send a message"
               }
               attachButton={false}
-              onSend={(innerText) => {
-                const newMessageEntity: MessageModel = {
-                  message: innerText,
-                  sender: clientId.toString(),
-                  direction: "outgoing",
-                  position: "normal",
-                };
-                console.log("onsend");
-                console.log(newMessageEntity);
-                sendMessage(newMessageEntity);
-                // setMessageEntities([...messageEntities, newMessageEntity]);
-              }}
+              onSend={sendMessage}
               disabled={!isLoggedIn}
             />
           </ChatContainer>
