@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
+
+import { useLocation, redirect } from "react-router";
 
 import {
   MessageProps,
@@ -11,27 +13,44 @@ import {
   MessageList,
   Message,
   MessageInput,
+  Avatar,
 } from "@chatscope/chat-ui-kit-react";
 
-import LoginSection from "../components/login/LoginSection";
+import LoginPage from "./LoginPage";
 import { AuthContext } from "../context/AuthContext";
 
 import axios from "axios";
 
+interface ChattingPageLocationState {
+  username: string
+}
+
 const ChattingPage = () => {
   const [messageEntities, setMessageEntities] = useState<MessageModel[]>([]);
 
-  const [username, setUsername] = useState("");
+  const { username, setUsername, isLoggedIn } = useContext(AuthContext);
+  // TODO: Remove isloggedin
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation()
+  const locationState: ChattingPageLocationState = location.state
+
   const webSocket = useRef<WebSocket>();
 
- 
-  // Executed when messageEntities are changed  
+  useEffect(() => {
+    console.log(locationState)
+    if (!locationState) {
+      redirect("/login")
+      return
+    }
+
+    setUsername(locationState.username)
+  }, [])
+
+  // Executed when messageEntities are changed
   useEffect(() => {
     // console.log(messageEntities)
     if (!webSocket?.current) return;
-    
+
     webSocket.current.onmessage = (e) => {
       const message = JSON.parse(e.data);
 
@@ -50,7 +69,7 @@ const ChattingPage = () => {
 
   // Executed only on first render
   useEffect(() => {
-    if (!isLoggedIn) return
+    if (!isLoggedIn) return;
 
     const url = "ws://0.0.0.0:8000/ws/" + username;
     const ws = new WebSocket(url);
@@ -61,8 +80,7 @@ const ChattingPage = () => {
     // executed on messeage recieved
     /* only executed for first-time receive */
     ws.onmessage = (e) => {
-      
-      console.log(`onmessage 1, ${e.data}`)
+      console.log(`onmessage 1, ${e.data}`);
       const message = JSON.parse(e.data);
       const newMessageEntity: MessageModel = {
         direction: username == message.username ? "outgoing" : "incoming",
@@ -70,11 +88,10 @@ const ChattingPage = () => {
         message: message.message,
         sender: `${message.username}`,
       };
-      
+
       /* messageEntities here will always be [] and would not get updated value */
       setMessageEntities([...messageEntities, newMessageEntity]);
     };
-
 
     webSocket.current = ws;
 
@@ -98,45 +115,37 @@ const ChattingPage = () => {
     // After sending, server will broadcast message which triggers event listener of onmessage
   };
 
-
-
   return (
-    <AuthContext.Provider
-      value={{
-        username: username,
-        setUsername: setUsername,
-        isLoggedIn: isLoggedIn,
-        setIsLoggedIn: setIsLoggedIn,
-      }}
-    >
-      <div className="chat-page">
-        <MainContainer style={{ flexDirection: "column" }}>
-          <LoginSection />
-
-          <ChatContainer>
-            <MessageList>
-              {messageEntities.map((m, i: number) => {
-                // console.log(messageEntities)
-                return (<Message
+    <div className="chat-page">
+      <MainContainer style={{ flexDirection: "column" }}>
+        <div className="chat-page-header">Logged in as: {username}</div>
+        <ChatContainer>
+          <MessageList>
+            {messageEntities.map((m, i: number) => {
+              return (
+                <Message
                   key={i}
                   {...messageToProps(m)}
-                  children={<Message.Header>{m.sender}</Message.Header>}
-                />)
-              })}
-            </MessageList>
-            <MessageInput
-              className="message-input"
-              placeholder={
-                isLoggedIn ? "Type message here" : "Login to send a message"
-              }
-              attachButton={false}
-              onSend={sendMessage}
-              disabled={!isLoggedIn}
-            />
-          </ChatContainer>
-        </MainContainer>
-      </div>
-    </AuthContext.Provider>
+                  children={[
+                    <Message.Header>{m.sender}</Message.Header>,
+                    <Avatar src="img/profile.png" />,
+                  ]}
+                />
+              );
+            })}
+          </MessageList>
+          <MessageInput
+            className="message-input"
+            placeholder={
+              isLoggedIn ? "Type message here" : "Login to send a message"
+            }
+            attachButton={false}
+            onSend={sendMessage}
+            disabled={!isLoggedIn}
+          />
+        </ChatContainer>
+      </MainContainer>
+    </div>
   );
 };
 

@@ -1,4 +1,6 @@
 .App {
+  display: flex;
+  flex-direction: column;
   width: 100vw;
   height: 100vh;
 }
@@ -38,3 +40,13 @@
   color: white !important;
 } 
 
+.chat-page-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  padding: 16px;
+
+  height: 3.5rem;
+  background-color: #EEEEEE;
+}
