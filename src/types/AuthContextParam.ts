@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 
-export interface AuthContextType {
+export interface AuthContextParam {
     username: string;
     setUsername: Dispatch<React.SetStateAction<string>>;
     isLoggedIn: boolean;

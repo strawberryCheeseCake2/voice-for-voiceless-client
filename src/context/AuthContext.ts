@@ -1,9 +1,9 @@
 import { createContext, useState } from "react";
-import { AuthContextType } from "../types/AuthContextType";
+import { AuthContextParam } from "../types/AuthContextParam";
 
 
 
-export const AuthContext = createContext<AuthContextType>({
+export const AuthContext = createContext<AuthContextParam>({
   username: "",
   setUsername: () => {},
   isLoggedIn: false,

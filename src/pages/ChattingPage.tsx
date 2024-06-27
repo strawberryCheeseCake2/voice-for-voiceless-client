@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 
-import { useLocation, redirect } from "react-router";
+import { useLocation, redirect, useNavigate } from "react-router";
 
 import {
   MessageProps,
@@ -22,7 +22,7 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 interface ChattingPageLocationState {
-  username: string
+  username: string;
 }
 
 const ChattingPage = () => {
@@ -31,41 +31,24 @@ const ChattingPage = () => {
   const { username, setUsername, isLoggedIn } = useContext(AuthContext);
   // TODO: Remove isloggedin
 
-  const location = useLocation()
-  const locationState: ChattingPageLocationState = location.state
+  const location = useLocation();
+  const locationState: ChattingPageLocationState = location.state;
+  const navigate = useNavigate();
 
   const webSocket = useRef<WebSocket>();
 
   useEffect(() => {
-    console.log(locationState)
+    console.log(locationState);
     if (!locationState) {
-      redirect("/login")
-      return
+      navigate("/signin");
+      return;
     }
 
-    setUsername(locationState.username)
-  }, [])
-
-  // Executed when messageEntities are changed
-  useEffect(() => {
-    // console.log(messageEntities)
-    if (!webSocket?.current) return;
-
-    webSocket.current.onmessage = (e) => {
-      const message = JSON.parse(e.data);
-
-      const newMessageEntity: MessageModel = {
-        // direction: clientId == message.clientId ? "outgoing" : "incoming",
-        direction: username == message.username ? "outgoing" : "incoming",
-        position: "normal",
-        message: message.message,
-        sender: `${message.username}`,
-      };
-
-      /* messageEntities here will always get latest value due to dependency */
-      setMessageEntities([...messageEntities, newMessageEntity]);
+    setUsername(locationState.username);
+    return () => {
+      window.history.replaceState({}, "");
     };
-  }, [messageEntities]);
+  }, []);
 
   // Executed only on first render
   useEffect(() => {
@@ -76,28 +59,43 @@ const ChattingPage = () => {
 
     // executed on connect
     ws.onopen = (event) => {};
-
-    // executed on messeage recieved
-    /* only executed for first-time receive */
-    ws.onmessage = (e) => {
-      console.log(`onmessage 1, ${e.data}`);
-      const message = JSON.parse(e.data);
-      const newMessageEntity: MessageModel = {
-        direction: username == message.username ? "outgoing" : "incoming",
-        position: "normal",
-        message: message.message,
-        sender: `${message.username}`,
-      };
-
-      /* messageEntities here will always be [] and would not get updated value */
-      setMessageEntities([...messageEntities, newMessageEntity]);
-    };
-
     webSocket.current = ws;
 
     //clean up function when we close page
     return () => ws.close();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, username]);
+
+  // Executed when messageEntities are changed
+  useEffect(() => {
+    if (!webSocket?.current) return;
+
+    webSocket.current.onmessage = (ev: MessageEvent<string>) => {
+      const message: WSMessage = JSON.parse(ev.data);
+
+      if (message.isStream && !message.isFirstToken) {
+        setMessageEntities((prevEntities) => {
+          const slicedEntities = prevEntities.slice(0, -1);
+          const newMessageEntity: MessageModel = {
+            direction: "incoming",
+            position: "normal",
+            message: message.content,
+            sender: `${message.sender}`,
+          };
+          return [...slicedEntities, newMessageEntity];
+        });
+      } else {
+        setMessageEntities((prevEntities) => {
+          const newMessageEntity: MessageModel = {
+            direction: username == message.sender ? "outgoing" : "incoming",
+            position: "normal",
+            message: message.content,
+            sender: `${message.sender}`,
+          };
+          return [...prevEntities, newMessageEntity];
+        });
+      }
+    };
+  }, [isLoggedIn, messageEntities, username, webSocket]);
 
   const messageToProps = (message: MessageModel) => {
     const _props: MessageProps = { model: message };

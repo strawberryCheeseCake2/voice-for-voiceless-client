@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./SignUpPage.css";
 
-import { UserType } from "../types/UserType";
+import { User } from "../types/User";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -27,12 +27,12 @@ const SignUpPage = () => {
   const createUser = async (_username: string) => {
     const url = "http://localhost:8000";
 
-    const user: UserType | undefined = await axios
+    const user: User | undefined = await axios
       .post(`${url}/users/`, {
         name: _username,
       })
       .then(function (response) {
-        const data: UserType = response.data;
+        const data: User = response.data;
 
         return data;
       })

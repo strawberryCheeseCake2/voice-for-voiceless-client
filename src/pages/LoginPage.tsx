@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
-import { UserType } from "../types/UserType";
+import { User } from "../types/User";
 
 const LoginPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -16,10 +16,10 @@ const LoginPage = () => {
   const signin = async (_username: string) => {
     const url = "http://localhost:8000";
 
-    const isUserValid: UserType | undefined = await axios
+    const isUserValid: User | undefined = await axios
       .get(`${url}/users/${username}`)
       .then(function (response) {
-        const data: UserType = response.data;
+        const data: User = response.data;
 
         return data;
       })
