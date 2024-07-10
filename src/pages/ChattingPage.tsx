@@ -16,6 +16,7 @@ import {
   Avatar,
 } from "@chatscope/chat-ui-kit-react";
 
+import SecretDmModal from "../components/SecretDmModal";
 import LoginPage from "./LoginPage";
 import { AuthContext } from "../context/AuthContext";
 
@@ -30,6 +31,8 @@ const ChattingPage = () => {
 
   const { username, setUsername, isLoggedIn } = useContext(AuthContext);
   // TODO: Remove isloggedin
+  const [isDmModalVisible, setIsDmModalVisible] = useState<boolean>(false);
+  const modalBackgroundRef = useRef<HTMLDivElement>(null);
 
   const location = useLocation();
   const locationState: ChattingPageLocationState = location.state;
@@ -113,10 +116,29 @@ const ChattingPage = () => {
     // After sending, server will broadcast message which triggers event listener of onmessage
   };
 
+  const handleOpenSecretDmModal = () => {
+    setIsDmModalVisible(true);
+  };
+
   return (
     <div className="chat-page">
       <MainContainer style={{ flexDirection: "column" }}>
-        <div className="chat-page-header">Logged in as: {username}</div>
+        {isDmModalVisible && (
+          <SecretDmModal
+            username={username}
+            setIsVisible={setIsDmModalVisible}
+            ref={modalBackgroundRef}
+          />
+        )}
+        <div className="chat-page-header">
+          <p>Logged in as: {username}</p>
+          <button
+            className="open-secret-dm-modal-button"
+            onClick={handleOpenSecretDmModal}
+          >
+            Send DM Secretly
+          </button>
+        </div>
         <ChatContainer>
           <MessageList>
             {messageEntities.map((m, i: number) => {

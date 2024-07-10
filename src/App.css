@@ -44,9 +44,92 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 
   padding: 16px;
 
   height: 3.5rem;
   background-color: #EEEEEE;
+}
+
+.open-secret-dm-modal-button {
+  height: 2.5rem;
+
+  padding-right: 16px;
+  padding-left: 16px;
+  
+  border: none;
+  border-radius: 8px;
+  background-color: #006769;
+  color: white;
+}
+
+
+/* TODO */
+
+
+.modal-background {
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.modal-container {
+  background-color: #ffffff;
+  width: 48rem;
+  height: 32rem;
+  padding: 1.5rem;
+
+  border-radius: 1rem;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+
+}
+
+.modal-textarea {
+  margin-bottom: 16px;
+  flex-grow: 1;
+
+  border: none;
+  resize: none;
+  font-size: large;
+  outline: none;
+}
+
+.modal-submit-button {
+  height: 2.5rem;
+
+  padding-right: 16px;
+  padding-left: 16px;
+  
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #006769;
+  color: white;
+
+  font-weight: bold;
+}
+
+.modal-submit-button:disabled {
+  height: 2.5rem;
+
+  padding-right: 16px;
+  padding-left: 16px;
+  
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #EEEEEE;
+  color: #C7C8CC;
+
+  font-weight: bold;
 }
