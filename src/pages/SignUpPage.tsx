@@ -13,6 +13,12 @@ const SignUpPage = () => {
 
   const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (username.trim() === "") {
+      alert("Error: Empty Username")
+      return
+    }
+
     const user = await createUser(username);
     if (!user) {
       alert("Error creating user. The Username might be already taken");

@@ -147,8 +147,8 @@ const ChattingPage = () => {
                   key={i}
                   {...messageToProps(m)}
                   children={[
-                    <Message.Header>{m.sender}</Message.Header>,
-                    <Avatar src="img/profile.png" />,
+                    <Message.Header>{m.sender == "DEVIL" ? "Anonymous Comments": m.sender}</Message.Header>,
+                    <Avatar src={m.sender == "DEVIL" ? "img/box.png" : "img/profile.png"} />,
                   ]}
                 />
               );
