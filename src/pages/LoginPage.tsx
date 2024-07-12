@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 import { User } from "../types/User";
+import { urls } from "../constants";
 
 const LoginPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -14,7 +15,7 @@ const LoginPage = () => {
 
 
   const signin = async (_username: string) => {
-    const url = "http://localhost:8000";
+    const url = urls.httpsLocaltunnel;
 
     const isUserValid: User | undefined = await axios
       .get(`${url}/users/${username}`)

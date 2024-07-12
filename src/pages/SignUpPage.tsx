@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./SignUpPage.css";
 
 import { User } from "../types/User";
+import { urls } from "../constants";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -31,7 +32,7 @@ const SignUpPage = () => {
   };
 
   const createUser = async (_username: string) => {
-    const url = "http://localhost:8000";
+    const url = urls.httpsLocaltunnel;
 
     const user: User | undefined = await axios
       .post(`${url}/users/`, {
@@ -44,6 +45,7 @@ const SignUpPage = () => {
       })
       .catch(function (error) {
         console.log(error);
+        alert(error);
         return undefined;
       });
 

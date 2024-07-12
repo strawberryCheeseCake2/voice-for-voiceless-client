@@ -11,6 +11,8 @@ import React, {
 
 import axios from "axios";
 
+import {urls, constants} from "../constants"
+
 interface SecretDmModalProps {
   setIsVisible: Dispatch<SetStateAction<boolean>>;
   username: string;
@@ -32,7 +34,7 @@ const SecretDmModal = forwardRef<HTMLDivElement, SecretDmModalProps>(
     };
 
     const sendDm = async (message: string, sender: string) => {
-      const url = "http://localhost:8000";
+      const url = urls.httpsLocaltunnel;
 
       const res = await axios
         .post(`${url}/secretDms/`, {

@@ -19,6 +19,7 @@ import {
 import SecretDmModal from "../components/SecretDmModal";
 import LoginPage from "./LoginPage";
 import { AuthContext } from "../context/AuthContext";
+import { urls, constants, imageSrc } from "../constants";
 
 import axios from "axios";
 
@@ -57,7 +58,7 @@ const ChattingPage = () => {
   useEffect(() => {
     if (!isLoggedIn) return;
 
-    const url = "ws://0.0.0.0:8000/ws/" + username;
+    const url = `ws://${urls.localtunnel}/ws/` + username;
     const ws = new WebSocket(url);
 
     // executed on connect
@@ -131,14 +132,14 @@ const ChattingPage = () => {
           />
         )}
         <div className="chat-page-header">
-          <p>Logged in as: {username}</p>
-          <button
-            className="open-secret-dm-modal-button"
-            onClick={handleOpenSecretDmModal}
-          >
-            Send DM Secretly
-          </button>
-        </div>
+            <p>Logged in as: {username}</p>
+            <button
+              className="open-secret-dm-modal-button"
+              onClick={handleOpenSecretDmModal}
+            >
+              {constants.sendDmSecretly}
+            </button>
+          </div>
         <ChatContainer>
           <MessageList>
             {messageEntities.map((m, i: number) => {
@@ -147,8 +148,18 @@ const ChattingPage = () => {
                   key={i}
                   {...messageToProps(m)}
                   children={[
-                    <Message.Header>{m.sender == "DEVIL" ? "Anonymous Comments": m.sender}</Message.Header>,
-                    <Avatar src={m.sender == "DEVIL" ? "img/box.png" : "img/profile.png"} />,
+                    <Message.Header>
+                      {m.sender == constants.devilName
+                        ? constants.anonymousComments
+                        : m.sender}
+                    </Message.Header>,
+                    <Avatar
+                      src={
+                        m.sender == constants.devilName
+                          ? imageSrc.box
+                          : imageSrc.profile
+                      }
+                    />,
                   ]}
                 />
               );
@@ -157,7 +168,9 @@ const ChattingPage = () => {
           <MessageInput
             className="message-input"
             placeholder={
-              isLoggedIn ? "Type message here" : "Login to send a message"
+              isLoggedIn
+                ? constants.messagePlaceholder
+                : "Login to send a message"
             }
             attachButton={false}
             onSend={sendMessage}
