@@ -32,7 +32,7 @@ const SignUpPage = () => {
   };
 
   const createUser = async (_username: string) => {
-    const url = urls.httpsLocaltunnel;
+    const url = urls.httpLocalhost;
 
     const user: User | undefined = await axios
       .post(`${url}/users/`, {

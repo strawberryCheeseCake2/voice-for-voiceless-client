@@ -40,10 +40,16 @@ const imageSrc = {
 }
 
 const urls = {
-  httpLocalhost: "http://localhost:8000",
-  localhost: "0.0.0.0:8000",
-  httpsLocaltunnel: "https://voiceforvoiceless.loca.lt",
-  localtunnel: "voiceforvoiceless.loca.lt"
+  // httpLocalhost: "http://localhost:8000",
+  // localhost: "0.0.0.0:8000",
+  httpLocalhost: "https://vfv-condc-blhne4gbqq-du.a.run.app",
+  localhost: "vfv-condc-blhne4gbqq-du.a.run.app",
+  // httpsLocaltunnel: "https://voiceforvoiceless.loca.lt",
+  // localtunnel: "voiceforvoiceless.loca.lt",
+  // httpLocalhost: "http://20.249.65.124:8000",
+  // localhost: "20.249.65.124:8000",
+  // httpsLocaltunnel: "http://20.249.65.124",
+  // localtunnel: "20.249.65.124"
 }
 
 export {constants, urls, imageSrc}

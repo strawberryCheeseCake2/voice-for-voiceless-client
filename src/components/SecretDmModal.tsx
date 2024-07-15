@@ -34,7 +34,7 @@ const SecretDmModal = forwardRef<HTMLDivElement, SecretDmModalProps>(
     };
 
     const sendDm = async (message: string, sender: string) => {
-      const url = urls.httpsLocaltunnel;
+      const url = urls.httpLocalhost;
 
       const res = await axios
         .post(`${url}/secretDms/`, {

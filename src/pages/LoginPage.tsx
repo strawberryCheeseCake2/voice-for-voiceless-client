@@ -15,7 +15,7 @@ const LoginPage = () => {
 
 
   const signin = async (_username: string) => {
-    const url = urls.httpsLocaltunnel;
+    const url = urls.httpLocalhost;
 
     const isUserValid: User | undefined = await axios
       .get(`${url}/users/${username}`)
