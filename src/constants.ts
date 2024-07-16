@@ -44,6 +44,7 @@ const urls = {
   // localhost: "0.0.0.0:8000",
   httpLocalhost: "https://vfv-condc-blhne4gbqq-du.a.run.app",
   localhost: "vfv-condc-blhne4gbqq-du.a.run.app",
+  wsslocalhost: "wss://vfv-condc-blhne4gbqq-du.a.run.app/ws/"
   // httpsLocaltunnel: "https://voiceforvoiceless.loca.lt",
   // localtunnel: "voiceforvoiceless.loca.lt",
   // httpLocalhost: "http://20.249.65.124:8000",
