@@ -17,7 +17,7 @@
 // }
 
 const constants = {
-  devilName: "악마의 대변인",
+  devilName: "DEVIL",
   loggedInAs: "로그인한 유저네임",
   secretDmPlaceholder: "악마의 대변인에게 보낼 메세지를 입력하세요",
   messagePlaceholder: "메세지를 입력하세요",
