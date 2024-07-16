@@ -149,14 +149,16 @@ const ChattingPage = () => {
                   {...messageToProps(m)}
                   children={[
                     <Message.Header>
-                      {m.sender == constants.devilName
+                      {/* {m.sender == constants.devilName
                         ? constants.anonymousComments
-                        : m.sender}
+                        : m.sender} */}
+                      {m.sender}
                     </Message.Header>,
                     <Avatar
                       src={
                         m.sender == constants.devilName
-                          ? imageSrc.box
+                          // ? imageSrc.box
+                          ? imageSrc.devil
                           : imageSrc.profile
                       }
                     />,
