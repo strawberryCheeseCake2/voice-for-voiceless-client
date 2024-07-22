@@ -58,7 +58,7 @@ const ChattingPage = () => {
   useEffect(() => {
     if (!isLoggedIn) return;
 
-    const url = urls.wsslocalhost + username;
+    const url = `${urls.wsBase}/` + username;
     const ws = new WebSocket(url);
 
     // executed on connect
