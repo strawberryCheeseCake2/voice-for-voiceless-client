@@ -43,13 +43,13 @@ const mode: "PROD"| "DEV" = "PROD"
 
 
 // const serverBase = "localhost:8000"
-// const serverBase = "https://vfv-conda-blhne4gbqq-du.a.run.app"
-const serverBase = "https://vfv-condc-blhne4gbqq-du.a.run.app"
+const serverBase = "vfv-conda-blhne4gbqq-du.a.run.app"
+// const serverBase = "https://vfv-condc-blhne4gbqq-du.a.run.app"
 // const serverBase = "https://voiceforvoiceless.loca.lt"
 
 const urls = {
-    httpBase: `${mode != "PROD" ? "http" : "https"}://${serverBase}`,
-    wsBase: `${mode != "PROD"? "ws" : "wss"}://${serverBase}/ws`,
+    httpBase: `${mode !== "PROD" ? "http" : "https"}://${serverBase}`,
+    wsBase: `${mode !== "PROD"? "ws" : "wss"}://${serverBase}/ws`,
 }
 
 export {constants, urls, imageSrc}
