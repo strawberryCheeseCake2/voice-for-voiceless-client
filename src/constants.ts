@@ -39,17 +39,17 @@ const imageSrc = {
   profile:"img/profile.png"
 }
 
+const mode: "PROD"| "DEV" = "PROD"
+
+
+// const serverBase = "localhost:8000"
+// const serverBase = "https://vfv-conda-blhne4gbqq-du.a.run.app"
+const serverBase = "https://vfv-condc-blhne4gbqq-du.a.run.app"
+// const serverBase = "https://voiceforvoiceless.loca.lt"
+
 const urls = {
-  // httpLocalhost: "http://localhost:8000",
-  // localhost: "0.0.0.0:8000",
-  httpLocalhost: "https://vfv-conda-blhne4gbqq-du.a.run.app",
-  localhost: "vfv-conda-blhne4gbqq-du.a.run.app",
-  // httpsLocaltunnel: "https://voiceforvoiceless.loca.lt",
-  // localtunnel: "voiceforvoiceless.loca.lt",
-  // httpLocalhost: "http://20.249.65.124:8000",
-  // localhost: "20.249.65.124:8000",
-  // httpsLocaltunnel: "http://20.249.65.124",
-  // localtunnel: "20.249.65.124"
+    httpBase: `${mode != "PROD" ? "http" : "https"}://${serverBase}`,
+    wsBase: `${mode != "PROD"? "ws" : "wss"}://${serverBase}/ws`,
 }
 
 export {constants, urls, imageSrc}

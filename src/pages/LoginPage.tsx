@@ -15,7 +15,7 @@ const LoginPage = () => {
 
 
   const signin = async (_username: string) => {
-    const url = urls.httpLocalhost;
+    const url = urls.httpBase;
 
     const isUserValid: User | undefined = await axios
       .get(`${url}/users/${username}`)
