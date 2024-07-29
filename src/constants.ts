@@ -28,7 +28,7 @@ const constants = {
   createUsername: "유저네임 만들기",
   signUp: "유저네임 생성하기",
   signIn: "로그인하기",
-  anonymousComments: "익명의 코멘트",
+  anonymousComments: "Comment Box",
   signInPlaceholder: "유저네임을 입력하여 채팅에 참여하세요",
   signUpPlaceholder: "유저네임을 입력하여 생성하세요",
 }
