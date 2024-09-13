@@ -16,7 +16,7 @@ const LoginPage = () => {
 
   const signin = async (_username: string) => {
     const url = urls.httpBase;
-    // console.log(`${url}/users/${username}`)
+    console.log(`${url}/users/${username}`)
     const isUserValid: User | undefined = await axios
       .get(`${url}/users/${username}`)
       .then(function (response) {
