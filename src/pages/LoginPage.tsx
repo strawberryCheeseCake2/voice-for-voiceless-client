@@ -25,7 +25,8 @@ const LoginPage = () => {
         return data;
       })
       .catch(function (error) {
-        alert("error")
+        alert(error)
+      
         return undefined;
       });
 
