@@ -133,12 +133,12 @@ const ChattingPage = () => {
         )}
         <div className="chat-page-header">
             <p>Logged in as: {username}</p>
-            <button
+            {/* <button
               className="open-secret-dm-modal-button"
               onClick={handleOpenSecretDmModal}
             >
               {constants.sendDmSecretly}
-            </button>
+            </button> */}
           </div>
         <ChatContainer>
           <MessageList>
