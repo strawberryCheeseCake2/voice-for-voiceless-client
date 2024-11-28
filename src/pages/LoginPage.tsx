@@ -16,7 +16,7 @@ const LoginPage = () => {
 
   const signin = async (_username: string) => {
     const url = urls.httpBase;
-
+    console.log(`${url}/users/${username}`)
     const isUserValid: User | undefined = await axios
       .get(`${url}/users/${username}`)
       .then(function (response) {
@@ -25,7 +25,10 @@ const LoginPage = () => {
         return data;
       })
       .catch(function (error) {
-        alert("error")
+        alert(error)
+        console.log(error)
+        console.log(error.data)
+      
         return undefined;
       });
 
