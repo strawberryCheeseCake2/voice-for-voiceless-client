@@ -39,11 +39,15 @@ const imageSrc = {
   profile:"img/profile.png"
 }
 
-const mode: "PROD"| "DEV" = "PROD"
+const mode: string = "DEV"
 
-// const serverBase = "localhost:8000"
+// ./loophole http 8000 --hostname condcb
+// https://webstory.github.io/2023/Cloudflare-Tunnel/
+// /home/user/.cloudflared/679c468e-c718-4855-9e16-e55199f3a2c9.json
+// const serverBase = "condcb.loophole.site"
+const serverBase = "localhost:8000"
 // const serverBase = "vfv-conda-blhne4gbqq-du.a.run.app"
-const serverBase = "vfv-condc-blhne4gbqq-du.a.run.app"
+// const serverBase = "vfv-condc-blhne4gbqq-du.a.run.app"
 // const serverBase = "voiceforvoiceless.loca.lt"
 
 const urls = {
